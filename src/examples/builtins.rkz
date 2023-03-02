@@ -1,0 +1,3 @@
+time()
+isNull(null)
+print("Hello World!")

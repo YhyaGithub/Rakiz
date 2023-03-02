@@ -1,5 +1,5 @@
-import Environment from "../interpeter/environment";
-import { Stmt } from "../interpeter/ast";
+import Environment from "../interpreter/environment";
+import { Stmt } from "../interpreter/ast";
 export type ValueType =
   | "null"
   | "number"

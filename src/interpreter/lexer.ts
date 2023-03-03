@@ -3,6 +3,7 @@ import { isint, isalpha, isskippable } from "../utils/valdations";
 
 enum LexerState {
   Normal,
+  Conditions,
   TypeAnnotation,
 }
 
@@ -17,8 +18,9 @@ export function tokenize(sourceCode: string): Token[] {
     let: TokenType.Let,
     const: TokenType.Const,
     fn: TokenType.Fn,
+    if: TokenType.If,
   };
-
+  const CONDITIONS: string[] = ["===", "!==", ">", "<", "<=", ">="];
   let state = LexerState.Normal;
 
   while (src.length > 0) {
@@ -31,9 +33,11 @@ export function tokenize(sourceCode: string): Token[] {
         break;
       case "{":
         tokens.push(token(src.shift(), TokenType.OpenBrace));
+        state = LexerState.Normal;
         break;
       case "}":
         tokens.push(token(src.shift(), TokenType.CloseBrace));
+        state = LexerState.Normal;
         break;
       case "[":
         tokens.push(token(src.shift(), TokenType.OpenBracket));
@@ -53,7 +57,7 @@ export function tokenize(sourceCode: string): Token[] {
         break;
       case ":":
         tokens.push(token(src.shift(), TokenType.Colon));
-        state = LexerState.TypeAnnotation;
+        //    state = LexerState.TypeAnnotation;
         break;
       case ";":
         tokens.push(token(src.shift(), TokenType.Semicolon));
@@ -72,10 +76,20 @@ export function tokenize(sourceCode: string): Token[] {
         tokens.push(token(src.shift(), TokenType.BinaryOperator));
         break;
       case "=":
-        tokens.push(token(src.shift(), TokenType.Equals));
-        state = LexerState.Normal;
-        break;
-
+        if (state === LexerState.Normal) {
+          tokens.push(token(src.shift(), TokenType.Equals));
+          break;
+        } else {
+          let str = "";
+          while ((src.length > 0 && src[0] === '=')) {
+            str += src.shift();
+          }
+          tokens.push(token(str, TokenType.Condition))
+          break;
+        }
+      case ">":
+      case "<":
+        tokens.push(token(src.shift(), TokenType.Condition))
       default:
         if (isalpha(src[0])) {
           let str = "";
@@ -83,12 +97,16 @@ export function tokenize(sourceCode: string): Token[] {
             str += src.shift();
           }
           let reserved = KEYWORDS[str];
-          if (state == LexerState.TypeAnnotation) {
+
+          /* if (state == LexerState.TypeAnnotation) {
             tokens.push(token(str, TokenType.Type));
-          } else if (typeof reserved === "undefined") {
-            tokens.push(token(str, TokenType.Identifier));
-          } else {
+          } else */ if (typeof reserved !== "undefined") {
+            if (reserved === TokenType.If) {
+              state = LexerState.Conditions;
+            }
             tokens.push(token(str, reserved));
+            } else {
+            tokens.push(token(str, TokenType.Identifier));
           }
         } else if (isint(src[0])) {
           let num = "";

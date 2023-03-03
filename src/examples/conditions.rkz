@@ -1,0 +1,11 @@
+let status = input("How are you today ? ");
+
+if (status === "fine") {
+  print("Me too!")
+}
+
+let years = input("How old are you? ");
+
+if (years < 18) {
+  print("Oh, Who gived you the device. you are so young to get a device.")
+}

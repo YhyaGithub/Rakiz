@@ -8,19 +8,17 @@ import {
   RuntimeVal,
   StringVal,
 } from "../types/values";
-import readline from 'readline-sync';
+import readline from "readline-sync";
 
 export function createGlobalEnv() {
   const env = new Environment();
-  // Create Default Global Enviornment
   env.declareVar("true", MK_BOOL(true), true);
   env.declareVar("false", MK_BOOL(false), true);
   env.declareVar("null", MK_NULL(), true);
 
-  // Define a native builtin method
   env.declareVar(
     "print",
-    MK_NATIVE_FN((args, scope) => {
+    MK_NATIVE_FN((args) => {
       let values = (args as NullVal[]).map((item) => item.value);
       console.log(values.join(" "));
       return MK_NULL();
@@ -37,12 +35,14 @@ export function createGlobalEnv() {
     false
   );
 
-  env.declareVar("isNull", MK_NATIVE_FN((args) => {
-    let variable = (args as NullVal[]).map((item) => item.type);
-    return MK_BOOL(variable.toString() === "null" ? true : false)
-  }),
-  true
-);
+  env.declareVar(
+    "isNull",
+    MK_NATIVE_FN((args) => {
+      let variable = (args as NullVal[]).map((item) => item.type);
+      return MK_BOOL(variable.toString() === "null" ? true : false);
+    }),
+    true
+  );
   function timeFunction(_args: RuntimeVal[], _env: Environment) {
     return MK_NUMBER(Date.now());
   }
@@ -82,7 +82,6 @@ export default class Environment {
   public assignVar(varname: string, value: RuntimeVal): RuntimeVal {
     const env = this.resolve(varname);
 
-    // Cannot assign to constant
     if (env.constants.has(varname)) {
       throw `Cannot reasign to variable ${varname} as it was declared constant.`;
     }

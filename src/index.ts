@@ -3,7 +3,7 @@ import { createGlobalEnv } from "./interpreter/environment";
 import { evaluate } from "./interpreter//interpreter";
 import fs from "fs";
 
-//run('./src/examples/builtins.rkz')
+run('./src/examples/conditions.rkz')
 
 function run(filename: string) {
   const parser = new Parser();

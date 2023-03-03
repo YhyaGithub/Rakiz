@@ -10,6 +10,7 @@ export enum TokenType {
   // Operators
   Equals,
   BinaryOperator,
+  Condition,
   Comma,
   Dot,
   Colon,
@@ -19,12 +20,13 @@ export enum TokenType {
   OpenBrace, // {
   CloseBrace, // }
   OpenBracket, // [
-  CloseBracket, //]  
+  CloseBracket, //]
 
   // Keywords
   Let,
   Const,
   Fn,
+  If,
 
   // Special
   EOF,

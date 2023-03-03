@@ -1,8 +1,11 @@
+import { Token } from "../types/tokens";
+
 export type NodeType =
   // Statements
   | "Program"
   | "VarDeclaration"
   | "FunctionDeclaration"
+  | "IfCondition"
   // Expressions
   | "AssignmentExpr"
   | "MemberExpr"
@@ -38,6 +41,11 @@ export interface FunctionDeclaration extends Stmt {
   body: Stmt[];
 }
 
+export interface IfCondition extends Stmt {
+  kind: "IfCondition";
+  condition: Token[];
+  body: Stmt[];
+}
 export interface Expr extends Stmt {}
 
 export interface AssignmentExpr extends Expr {

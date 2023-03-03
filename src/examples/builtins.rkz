@@ -1,3 +1,3 @@
-time()
-isNull(null)
-print("Hello World!")
+time() # return the time as number.
+isNull(null) # return if the value is null
+print("Hello World!") # output: Hello World!

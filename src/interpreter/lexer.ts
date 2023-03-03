@@ -55,6 +55,13 @@ export function tokenize(sourceCode: string): Token[] {
         src.shift();
         tokens.push(token(str, TokenType.String));
         break;
+      case "#":
+        src.shift();
+        while (src[1] !== "\n") {
+          src.shift();
+        }
+        src.shift();
+        break;
       case ":":
         tokens.push(token(src.shift(), TokenType.Colon));
         //    state = LexerState.TypeAnnotation;
@@ -81,15 +88,15 @@ export function tokenize(sourceCode: string): Token[] {
           break;
         } else {
           let str = "";
-          while ((src.length > 0 && src[0] === '=')) {
+          while (src.length > 0 && src[0] === "=") {
             str += src.shift();
           }
-          tokens.push(token(str, TokenType.Condition))
+          tokens.push(token(str, TokenType.Condition));
           break;
         }
       case ">":
       case "<":
-        tokens.push(token(src.shift(), TokenType.Condition))
+        tokens.push(token(src.shift(), TokenType.Condition));
       default:
         if (isalpha(src[0])) {
           let str = "";
@@ -105,7 +112,7 @@ export function tokenize(sourceCode: string): Token[] {
               state = LexerState.Conditions;
             }
             tokens.push(token(str, reserved));
-            } else {
+          } else {
             tokens.push(token(str, TokenType.Identifier));
           }
         } else if (isint(src[0])) {

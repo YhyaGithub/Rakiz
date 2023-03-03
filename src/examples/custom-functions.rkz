@@ -1,5 +1,5 @@
 fn add(a, b) {
-  a + b
+  a + b # no need to return keyword.
 }
 
-add(1, 2)
+add(1,2) # output: 3

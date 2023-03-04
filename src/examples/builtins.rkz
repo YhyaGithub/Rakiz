@@ -1,4 +1,11 @@
-time() # returns the time as number.
-min(1, 2) # returns the minimum value, required two numbers only. output: 1
-isNull(null) # output: true
+# Console
 print("Hello World!") # output: Hello World!
+
+# Date
+time() # returns the time as number.
+
+# Math
+min(1, 2) # returns the minimum value, required two numbers only. output: 1
+
+# Validations
+isNull(null) # output: true

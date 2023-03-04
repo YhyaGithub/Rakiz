@@ -2,7 +2,12 @@
   "name": "rakiz",
   "version": "1.0.0",
   "description": "Rakiz is a simple programming language built with TypeScript that aims to be easy to learn and use.",
-  "files": ["dist", "bin", "package.json", "LICENSE.md"],
+  "files": [
+    "dist",
+    "bin",
+    "package.json",
+    "LICENSE.md"
+  ],
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +16,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/YhyaGithub/Rakiz.git"
+  },
+  "publishConfig": {
+    "@yhyadev:registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "programming",

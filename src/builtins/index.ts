@@ -44,11 +44,20 @@ export default function builtins(env: Environment) {
     MK_NATIVE_FN((args) => {
       let value1 = (args[0] as NullVal).value!;
       let value2 = (args[1] as NullVal).value!;
-      return MK_NUMBER(Math.min(value1, value2))
+      return MK_NUMBER(Math.min(value1, value2));
     }),
     false
   );
 
+  env.declareVar(
+    "max",
+    MK_NATIVE_FN((args) => {
+      let value1 = (args[0] as NullVal).value!;
+      let value2 = (args[1] as NullVal).value!;
+      return MK_NUMBER(Math.max(value1, value2));
+    }),
+    false
+  );
   env.declareVar(
     "time",
     MK_NATIVE_FN(() => {

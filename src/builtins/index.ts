@@ -1,9 +1,16 @@
 import Environment from "../interpreter/environment";
 import readline from "readline-sync";
-import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, MK_STRING, NullVal, RuntimeVal, StringVal } from "../types/values";
+import {
+  MK_BOOL,
+  MK_NATIVE_FN,
+  MK_NULL,
+  MK_NUMBER,
+  MK_STRING,
+  NullVal,
+  StringVal,
+} from "../types/values";
 
-export default function builtins(env: Environment){
-
+export default function builtins(env: Environment) {
   env.declareVar(
     "print",
     MK_NATIVE_FN((args) => {
@@ -32,8 +39,21 @@ export default function builtins(env: Environment){
     true
   );
 
-  function timeFunction(_args: RuntimeVal[], _env: Environment) {
-    return MK_NUMBER(Date.now());
-  }
-  env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
+  env.declareVar(
+    "min",
+    MK_NATIVE_FN((args) => {
+      let value1 = (args[0] as NullVal).value!;
+      let value2 = (args[1] as NullVal).value!;
+      return value1 > value2 ? MK_NUMBER(parseFloat(value1)) : MK_NUMBER(parseFloat(value2));
+    }),
+    false
+  );
+
+  env.declareVar(
+    "time",
+    MK_NATIVE_FN(() => {
+      return MK_NUMBER(Date.now());
+    }),
+    true
+  );
 }

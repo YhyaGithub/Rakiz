@@ -1,3 +1,4 @@
-time() # return the time as number.
+time() # returns the time as number.
+min(1, 2) # returns the minimum value, required two numbers only.
 isNull(null) # return if the value is null
 print("Hello World!") # output: Hello World!

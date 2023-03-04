@@ -44,7 +44,7 @@ export default function builtins(env: Environment) {
     MK_NATIVE_FN((args) => {
       let value1 = (args[0] as NullVal).value!;
       let value2 = (args[1] as NullVal).value!;
-      return value1 > value2 ? MK_NUMBER(parseFloat(value1)) : MK_NUMBER(parseFloat(value2));
+      return MK_NUMBER(Math.min(value1, value2))
     }),
     false
   );

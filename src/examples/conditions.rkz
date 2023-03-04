@@ -9,3 +9,7 @@ let years = input("How old are you? ");
 if (years < 18) {
   print("Oh, Who gived you the device. you are so young to get a device.")
 }
+
+if (years < 18) {
+  print("Yes sir")
+} 

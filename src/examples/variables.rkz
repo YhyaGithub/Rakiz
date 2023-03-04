@@ -1,4 +1,7 @@
+# Litterals
 let string = "this is string";
 let number = 0;
+
+# Booleans
 let boolean = true;
 let boolean2 = false;

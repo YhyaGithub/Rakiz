@@ -10,6 +10,6 @@ if (years < 18) {
   print("Oh, Who gived you the device. you are so young to get a device.")
 }
 
-if (years < 18) {
+if (years > 18) {
   print("Yes sir")
 } 

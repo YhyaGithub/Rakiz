@@ -67,7 +67,7 @@ export function eval_if_condition(
 
   switch (declaration.condition[1].value) {
     case "===":
-      if (left.value === right.value) {
+      if (left.value == right.value) {
         for (const stmt of declaration.body) {
           result = evaluate(stmt, env);
         }
@@ -91,5 +91,20 @@ export function eval_if_condition(
       break;
   }
 
-  return result ?? MK_NULL();
+  return result ?? eval_else(declaration, env);
+}
+
+function eval_else(
+  declaration: IfCondition,
+  env: Environment
+): RuntimeVal {
+  if (declaration.else !== null) {
+    let result;
+    for (const stmt of declaration.else.body) {
+      result = evaluate(stmt, env);
+    }
+    return result ?? MK_NULL();
+  } else {
+    return MK_NULL();
+  }
 }

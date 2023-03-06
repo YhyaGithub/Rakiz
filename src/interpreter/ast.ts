@@ -6,6 +6,7 @@ export type NodeType =
   | "VarDeclaration"
   | "FunctionDeclaration"
   | "IfCondition"
+  | "ElseCondition"
   // Expressions
   | "AssignmentExpr"
   | "MemberExpr"
@@ -44,6 +45,12 @@ export interface FunctionDeclaration extends Stmt {
 export interface IfCondition extends Stmt {
   kind: "IfCondition";
   condition: Token[];
+  else: ElseCondition | null;
+  body: Stmt[];
+}
+
+export interface ElseCondition extends Stmt {
+  kind: "ElseCondition";
   body: Stmt[];
 }
 export interface Expr extends Stmt {}

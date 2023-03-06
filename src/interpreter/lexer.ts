@@ -19,8 +19,8 @@ export function tokenize(sourceCode: string): Token[] {
     const: TokenType.Const,
     fn: TokenType.Fn,
     if: TokenType.If,
+    else: TokenType.Else,
   };
-  const CONDITIONS: string[] = ["===", "!==", ">", "<", "<=", ">="];
   let state = LexerState.Normal;
 
   while (src.length > 0) {
@@ -64,7 +64,6 @@ export function tokenize(sourceCode: string): Token[] {
         break;
       case ":":
         tokens.push(token(src.shift(), TokenType.Colon));
-        //    state = LexerState.TypeAnnotation;
         break;
       case ";":
         tokens.push(token(src.shift(), TokenType.Semicolon));
@@ -105,9 +104,7 @@ export function tokenize(sourceCode: string): Token[] {
           }
           let reserved = KEYWORDS[str];
 
-          /* if (state == LexerState.TypeAnnotation) {
-            tokens.push(token(str, TokenType.Type));
-          } else */ if (typeof reserved !== "undefined") {
+          if (typeof reserved !== "undefined") {
             if (reserved === TokenType.If) {
               state = LexerState.Conditions;
             }

@@ -27,7 +27,7 @@ export enum TokenType {
   Const,
   Fn,
   If,
-
+  Else,
   // Special
   EOF,
 }

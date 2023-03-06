@@ -14,11 +14,11 @@ import {
   FunctionDeclaration,
   StringLiteral,
   IfCondition,
+  ElseCondition,
 } from "./ast";
 
 import { tokenize } from "./lexer";
 import { TokenType, Token } from "../types/tokens";
-import { MK_BOOL } from "../types/values";
 
 export default class Parser {
   private tokens: Token[] = [];
@@ -147,13 +147,37 @@ export default class Parser {
       "Closing brace expected inside if condition body"
     );
 
+    let elseCond: ElseCondition | null = null;
+    if(this.at().type === TokenType.Else){
+     elseCond = this.parse_else_keyword();
+    }
+
     const IFC = {
       kind: "IfCondition",
       body,
+      else: elseCond,
       condition: [left, conditionType, right],
     } as IfCondition;
 
     return IFC;
+  }
+
+  parse_else_keyword(): ElseCondition {
+    this.eat();
+    let body: Stmt[] = [];
+    this.expect(TokenType.OpenBrace, "Expected else body.")
+    while (
+      this.at().type !== TokenType.EOF &&
+      this.at().type !== TokenType.CloseBrace
+    ) {
+      body.push(this.parse_stmt());
+    }
+    this.expect(TokenType.CloseBrace, "Expected closing brace.")
+
+    return {
+      kind: "ElseCondition",
+      body
+    } as ElseCondition;
   }
 
   parse_var_declaration(): Stmt {
@@ -190,7 +214,7 @@ export default class Parser {
 
     this.expect(
       TokenType.Semicolon,
-      "Variable declaration statment must end with semicolon."
+      "Variable declaration statementmust end with semicolon."
     );
 
     return declaration;

@@ -4,9 +4,6 @@ export enum TokenType {
   String,
   Number,
 
-  // Type
-  Type,
-
   // Operators
   Equals,
   BinaryOperator,
@@ -28,6 +25,7 @@ export enum TokenType {
   Fn,
   If,
   Else,
+  Elif,
   // Special
   EOF,
 }

@@ -15,6 +15,7 @@ import {
   StringLiteral,
   IfCondition,
   ElseCondition,
+  Case,
 } from "./ast";
 
 import { tokenize } from "./lexer";
@@ -123,17 +124,23 @@ export default class Parser {
     this.eat();
     this.expect(
       TokenType.OpenParen,
-      "Expected condition int parenthesis after the if keyword."
+      "Expected open parenthesis after the if keyword."
     );
 
     let left = this.eat();
     let conditionType = this.eat();
     let right = this.eat();
-
-    this.eat();
+    let cases: Case[] = [];
+    
+    cases.push({ left, condition: conditionType, right });
+    this.expect(
+      TokenType.CloseParen,
+      "Expected close parenthesis after the condition"
+    );
 
     this.expect(TokenType.OpenBrace, "Expected body following if condition");
-    const body: Stmt[] = [];
+    let bodies: Stmt[][] = [];
+    let body: Stmt[] = [];
 
     while (
       this.at().type !== TokenType.EOF &&
@@ -141,22 +148,28 @@ export default class Parser {
     ) {
       body.push(this.parse_stmt());
     }
+    bodies.push(body);
 
     this.expect(
       TokenType.CloseBrace,
       "Closing brace expected inside if condition body"
     );
 
+    if (this.at().type === TokenType.Elif) {
+      let [body, caseElif] = this.parse_elseif_keyword();
+      bodies.push(body as Stmt[]), cases.push(caseElif as Case);
+    }
+
     let elseCond: ElseCondition | null = null;
-    if(this.at().type === TokenType.Else){
-     elseCond = this.parse_else_keyword();
+    if (this.at().type === TokenType.Else) {
+      elseCond = this.parse_else_keyword();
     }
 
     const IFC = {
       kind: "IfCondition",
-      body,
+      bodies,
       else: elseCond,
-      condition: [left, conditionType, right],
+      cases,
     } as IfCondition;
 
     return IFC;
@@ -165,19 +178,49 @@ export default class Parser {
   parse_else_keyword(): ElseCondition {
     this.eat();
     let body: Stmt[] = [];
-    this.expect(TokenType.OpenBrace, "Expected else body.")
+    this.expect(TokenType.OpenBrace, "Expected else body.");
     while (
       this.at().type !== TokenType.EOF &&
       this.at().type !== TokenType.CloseBrace
     ) {
       body.push(this.parse_stmt());
     }
-    this.expect(TokenType.CloseBrace, "Expected closing brace.")
+    this.expect(TokenType.CloseBrace, "Expected closing brace.");
 
     return {
       kind: "ElseCondition",
-      body
+      body,
     } as ElseCondition;
+  }
+  parse_elseif_keyword() {
+    this.eat();
+
+    this.expect(
+      TokenType.OpenParen,
+      "Expected open parenthesis after the elif keyword"
+    );
+
+    let left = this.eat();
+    let conditionType = this.expect(TokenType.Condition, "Expected condition inside of the parenthesis");
+    let right = this.eat();
+    
+    this.expect(
+      TokenType.CloseParen,
+      "Expected close parenthesis after the condition"
+    );
+
+    this.expect(TokenType.OpenBrace, "Expected elif body");
+    let body: Stmt[] = [];
+
+    while (
+      this.at().type !== TokenType.EOF &&
+      this.at().type !== TokenType.CloseBrace
+    ) {
+      body.push(this.parse_stmt());
+    }
+
+    this.expect(TokenType.CloseBrace, "Expected closing brace");
+    return [body, { left, condition: conditionType, right }];
   }
 
   parse_var_declaration(): Stmt {

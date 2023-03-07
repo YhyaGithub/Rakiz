@@ -20,6 +20,7 @@ export function tokenize(sourceCode: string): Token[] {
     fn: TokenType.Fn,
     if: TokenType.If,
     else: TokenType.Else,
+    elif: TokenType.Elif
   };
   let state = LexerState.Normal;
 
@@ -85,7 +86,7 @@ export function tokenize(sourceCode: string): Token[] {
         if (state === LexerState.Normal) {
           tokens.push(token(src.shift(), TokenType.Equals));
           break;
-        } else {
+        } else if (state === LexerState.Conditions){
           let str = "";
           while (src.length > 0 && src[0] === "=") {
             str += src.shift();
@@ -105,7 +106,7 @@ export function tokenize(sourceCode: string): Token[] {
           let reserved = KEYWORDS[str];
 
           if (typeof reserved !== "undefined") {
-            if (reserved === TokenType.If) {
+            if (reserved === TokenType.If || reserved === TokenType.Elif) {
               state = LexerState.Conditions;
             }
             tokens.push(token(str, reserved));

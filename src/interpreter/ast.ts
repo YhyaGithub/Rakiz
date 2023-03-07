@@ -44,11 +44,16 @@ export interface FunctionDeclaration extends Stmt {
 
 export interface IfCondition extends Stmt {
   kind: "IfCondition";
-  condition: Token[];
+  cases: Case[];
   else: ElseCondition | null;
-  body: Stmt[];
+  bodies: Stmt[][];
 }
 
+export interface Case {
+  left: Token;
+  condition: Token;
+  right: Token;
+}
 export interface ElseCondition extends Stmt {
   kind: "ElseCondition";
   body: Stmt[];

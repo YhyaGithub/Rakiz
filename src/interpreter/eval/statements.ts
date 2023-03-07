@@ -12,7 +12,7 @@ import {
   NullVal,
   RuntimeVal,
 } from "../../types/values";
-import { TokenType } from "../../types/tokens";
+import { Token, TokenType } from "../../types/tokens";
 
 export function eval_program(program: Program, env: Environment): RuntimeVal {
   let lastEvaluated: RuntimeVal = MK_NULL();
@@ -53,51 +53,56 @@ export function eval_if_condition(
   declaration: IfCondition,
   env: Environment
 ): RuntimeVal {
-  let left =
-    declaration.condition[0].type == TokenType.Identifier
-      ? (env.lookupVar(declaration.condition[0].value) as NullVal)
-      : declaration.condition[0];
-
-  let right =
-    declaration.condition[2].type == TokenType.Identifier
-      ? (env.lookupVar(declaration.condition[2].value) as NullVal)
-      : declaration.condition[2];
-
+  let cases = declaration.cases;
+  let bodies = declaration.bodies;
   let result;
-
-  switch (declaration.condition[1].value) {
-    case "===":
-      if (left.value == right.value) {
-        for (const stmt of declaration.body) {
-          result = evaluate(stmt, env);
-        }
-      }
+  for (let i = 0; i < cases.length; i++) {
+    if (result) {
       break;
+    }
 
-    case ">":
-      if (left.value! > right.value!) {
-        for (const stmt of declaration.body) {
-          result = evaluate(stmt, env);
-        }
-      }
-      break;
+    let left =
+      cases[i].left.type === TokenType.Identifier
+        ? (env.lookupVar(cases[i].left.value) as NullVal)
+        : cases[i].left;
 
-    case "<":
-      if (left.value! < right.value!) {
-        for (const stmt of declaration.body) {
-          result = evaluate(stmt, env);
+    let right =
+      cases[i].right.type === TokenType.Identifier
+        ? (env.lookupVar(cases[i].right.value) as NullVal)
+        : cases[i].right;
+    switch (cases[i].condition.value) {
+      case "===":
+        if (left.value == right.value) {
+          for (const stmt of bodies[i]) {
+            result = evaluate(stmt, env);
+          }
         }
-      }
-      break;
+        break;
+      case ">":
+        if (left.value! > right.value!) {
+          for (const stmt of bodies[i]) {
+            result = evaluate(stmt, env);
+          }
+        }
+        break;
+
+      case "<":
+        if (left.value! < right.value!) {
+          for (const stmt of bodies[i]) {
+            result = evaluate(stmt, env);
+          }
+        }
+        break;
+
+      default:
+        break;
+    }
   }
-
   return result ?? eval_else(declaration, env);
 }
 
-function eval_else(
-  declaration: IfCondition,
-  env: Environment
-): RuntimeVal {
+function eval_else(declaration: IfCondition, env: Environment): RuntimeVal {
+  console.log(declaration.bodies, declaration.cases);
   if (declaration.else !== null) {
     let result;
     for (const stmt of declaration.else.body) {

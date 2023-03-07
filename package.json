@@ -1,6 +1,6 @@
 {
   "name": "rakiz",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Rakiz is a simple programming language built with TypeScript that aims to be easy to learn and use.",
   "files": [
     "dist",

@@ -102,7 +102,6 @@ export function eval_if_condition(
 }
 
 function eval_else(declaration: IfCondition, env: Environment): RuntimeVal {
-  console.log(declaration.bodies, declaration.cases);
   if (declaration.else !== null) {
     let result;
     for (const stmt of declaration.else.body) {

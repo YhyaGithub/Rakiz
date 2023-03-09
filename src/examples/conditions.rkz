@@ -8,7 +8,7 @@ if (status === "fine") {
   print("What?")
 }
 
-let years = input("How old are you? ");
+let years = numinput("How old are you? ");
 
 if (years < 18) {
   print("Oh")

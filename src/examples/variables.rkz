@@ -5,3 +5,6 @@ let number = 0;
 # Booleans
 let boolean = true;
 let boolean2 = false;
+
+# Null
+let nullvalue = null;

@@ -5,8 +5,10 @@ print("Hello World!") # output: Hello World!
 time() # returns the time as number.
 
 # Math
+random(1, 10) # returns random value from 1 to 10, required two numbers only.
 min(1, 2) # returns the minimum value, required two numbers only. output: 1
 max(1, 2) # returns the maximum value, required two numbers only. output: 2
 
 # Validations
 isNull(null) # output: true
+isNumber(1) # output: true

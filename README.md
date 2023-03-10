@@ -25,7 +25,7 @@ rakiz
 
 ## 💻 Examples
 
-There are several examples available in the `src/examples` folder to help you learn the Rakiz syntax.
+There are several examples available in the `examples` folder to help you learn the Rakiz syntax.
 
 ## 📋 License
 

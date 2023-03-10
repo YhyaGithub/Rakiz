@@ -12,7 +12,7 @@ import {
   NullVal,
   RuntimeVal,
 } from "../../types/values";
-import { Token, TokenType } from "../../types/tokens";
+import { TokenType } from "../../types/tokens";
 
 export function eval_program(program: Program, env: Environment): RuntimeVal {
   let lastEvaluated: RuntimeVal = MK_NULL();
@@ -71,8 +71,15 @@ export function eval_if_condition(
         ? (env.lookupVar(cases[i].right.value) as NullVal)
         : cases[i].right;
     switch (cases[i].condition.value) {
-      case "===":
+      case "is":
         if (left.value == right.value) {
+          for (const stmt of bodies[i]) {
+            result = evaluate(stmt, env);
+          }
+        }
+        break;
+      case "not":
+        if (left.value !== right.value) {
           for (const stmt of bodies[i]) {
             result = evaluate(stmt, env);
           }

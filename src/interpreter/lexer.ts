@@ -1,12 +1,6 @@
 import { TokenType, Token } from "../types/tokens";
 import { isint, isalpha, isskippable } from "../utils/valdations";
 
-enum LexerState {
-  Normal,
-  Conditions,
-  TypeAnnotation,
-}
-
 function token(value = "", type: TokenType): Token {
   return { value, type } as Token;
 }
@@ -20,9 +14,10 @@ export function tokenize(sourceCode: string): Token[] {
     fn: TokenType.Fn,
     if: TokenType.If,
     else: TokenType.Else,
-    elif: TokenType.Elif
+    elif: TokenType.Elif,
+    is: TokenType.Condition,
+    not: TokenType.Condition
   };
-  let state = LexerState.Normal;
 
   while (src.length > 0) {
     switch (src[0]) {
@@ -34,11 +29,9 @@ export function tokenize(sourceCode: string): Token[] {
         break;
       case "{":
         tokens.push(token(src.shift(), TokenType.OpenBrace));
-        state = LexerState.Normal;
         break;
       case "}":
         tokens.push(token(src.shift(), TokenType.CloseBrace));
-        state = LexerState.Normal;
         break;
       case "[":
         tokens.push(token(src.shift(), TokenType.OpenBracket));
@@ -83,17 +76,8 @@ export function tokenize(sourceCode: string): Token[] {
         tokens.push(token(src.shift(), TokenType.BinaryOperator));
         break;
       case "=":
-        if (state === LexerState.Normal) {
-          tokens.push(token(src.shift(), TokenType.Equals));
-          break;
-        } else if (state === LexerState.Conditions){
-          let str = "";
-          while (src.length > 0 && src[0] === "=") {
-            str += src.shift();
-          }
-          tokens.push(token(str, TokenType.Condition));
-          break;
-        }
+        tokens.push(token(src.shift(), TokenType.Equals));
+        break;
       case ">":
       case "<":
         tokens.push(token(src.shift(), TokenType.Condition));
@@ -106,9 +90,6 @@ export function tokenize(sourceCode: string): Token[] {
           let reserved = KEYWORDS[str];
 
           if (typeof reserved !== "undefined") {
-            if (reserved === TokenType.If || reserved === TokenType.Elif) {
-              state = LexerState.Conditions;
-            }
             tokens.push(token(str, reserved));
           } else {
             tokens.push(token(str, TokenType.Identifier));

@@ -1,8 +1,8 @@
 let status = input("How are you today ? ");
 
-if (status === "fine") {
+if (status is "fine") {
   print("Me too!")
-} elif (status === "good") {
+} elif (status is "good") {
   print("Great!")
 } else {
   print("What?")
